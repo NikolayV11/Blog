@@ -1,18 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Blog.Core.Models.User.Configurations {
-    public class UserConfigurations : IEntityTypeConfiguration<Entity.User> {
+namespace Blog.DataAccess.Entites.User.Configuration {
+    internal class UserConfiguration : IEntityTypeConfiguration<Entity.User> {
         public void Configure ( EntityTypeBuilder<Entity.User> builder ) {
             // имя таблицы
-            builder.ToTable( "users" );
+            builder.ToTable("users");
 
             // id
-            builder.HasKey( u => u.Id );
+            builder.HasKey(u => u.Id);
 
-            // имя, фамилия
+            // имя, фамилия, отчество
             builder.Property(u => u.LastName).IsRequired().HasMaxLength(50);
             builder.Property(u => u.FirstName).IsRequired().HasMaxLength(50);
+            builder.Property(u => u.Surname).HasMaxLength(50);
 
             // Email
             builder.Property(u => u.Email).IsRequired().HasMaxLength(255);
@@ -20,7 +22,7 @@ namespace Blog.Core.Models.User.Configurations {
 
             // телефон
             builder.Property(u => u.Phone).IsRequired().HasMaxLength(20);
-            builder.HasIndex(u =>u.Phone).IsUnique();
+            builder.HasIndex(u => u.Phone).IsUnique();
 
             // PasswordHash
             builder.Property(u => u.PasswordHash).IsRequired().HasMaxLength(255);
