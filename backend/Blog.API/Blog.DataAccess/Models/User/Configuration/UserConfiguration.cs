@@ -38,6 +38,9 @@ namespace Blog.DataAccess.Entites.User.Configuration {
                 .ValueGeneratedOnAddOrUpdate() // Генерировать при добавлении и обновлении
                 .HasDefaultValueSql("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
             ;
+
+            // для фотографии профиля
+
         }
     }
 }
