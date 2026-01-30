@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Blog.DataAccess.Entites.User.Configuration {
+namespace Blog.DataAccess.Models.User.Configuration {
     internal class UserConfiguration : IEntityTypeConfiguration<Entity.User> {
         public void Configure ( EntityTypeBuilder<Entity.User> builder ) {
             // имя таблицы
@@ -17,30 +17,41 @@ namespace Blog.DataAccess.Entites.User.Configuration {
             builder.Property(u => u.Surname).HasMaxLength(50);
 
             // Email
-            builder.Property(u => u.Email).IsRequired().HasMaxLength(255);
+            builder.Property(u => u.Email).IsRequired()
+                .HasMaxLength(255);
             builder.HasIndex(u => u.Email).IsUnique();
 
             // телефон
-            builder.Property(u => u.Phone).IsRequired().HasMaxLength(20);
+            builder.Property(u => u.Phone).IsRequired()
+                .HasMaxLength(20);
             builder.HasIndex(u => u.Phone).IsUnique();
 
             // PasswordHash
-            builder.Property(u => u.PasswordHash).IsRequired().HasMaxLength(255);
+            builder.Property(u => u.PasswordHash).IsRequired()
+                .HasMaxLength(255);
 
             // дата рождения
             builder.Property(u => u.Birthday).IsRequired();
 
             //дата регистрации
-            builder.Property(u => u.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
+            builder.Property(u => u.CreatedAt).IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             // дата изменения
             builder.Property(u => u.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate() // Генерировать при добавлении и обновлении
-                .HasDefaultValueSql("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-            ;
+            // Генерировать при добавлении и обновлении
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql(
+                "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+                );
 
             // для фотографии профиля
-
+            builder.HasOne(u => u.Avatar)
+                .WithOne(a => a.User)
+                .HasForeignKey<Entity.User>(u => u.AvatarId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+                
         }
     }
 }
