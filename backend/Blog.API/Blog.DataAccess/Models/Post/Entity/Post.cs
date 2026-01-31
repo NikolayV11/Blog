@@ -1,5 +1,4 @@
 ﻿using Blog.DataAccess.Models.Common;
-using Blog.DataAccess.Models.User.Entity;
 namespace Blog.DataAccess.Models.Post.Entity {
     public class Post : BaseEntity {
         public string? Content { get; set; }
@@ -9,5 +8,9 @@ namespace Blog.DataAccess.Models.Post.Entity {
 
         // коллекция изображений (Галерея)
         public List<PostImages> Images { get; set; } = new();
+        // коллекция комментариев
+        public List<Commentes> commentes { get; set; } = new();
+        // коллекция лайков
+        public List<LikePost> Likes { get; set; } = new();
     }
 }
