@@ -9,7 +9,7 @@ namespace Blog.DataAccess.Models.Post.Entity {
         // коллекция изображений (Галерея)
         public List<PostImages> Images { get; set; } = new();
         // коллекция комментариев
-        public List<Commentes> commentes { get; set; } = new();
+        public List<Commentes> Commentes { get; set; } = new();
         // коллекция лайков
         public List<LikePost> Likes { get; set; } = new();
     }

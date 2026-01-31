@@ -5,5 +5,6 @@ namespace Blog.DataAccess.Models.Post.Entity {
         public int UserId { get; set; }
         public User.Entity.User User { get; set; }
         public int CommentId { get; set; }
+        public Commentes Commentes { get; set; }
     }
 }

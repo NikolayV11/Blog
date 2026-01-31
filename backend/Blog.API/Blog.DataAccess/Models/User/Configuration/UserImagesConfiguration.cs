@@ -19,6 +19,7 @@ namespace Blog.DataAccess.Models.User.Configuration {
             builder.Property(i => i.StoredName)
                 .IsRequired()
                 .HasMaxLength(255);
+
             builder.HasIndex(i => i.StoredName)
                 .IsUnique(true);
 
@@ -46,6 +47,7 @@ namespace Blog.DataAccess.Models.User.Configuration {
                 .WithMany()
                 .HasForeignKey(i => i.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
         }
     }
 }

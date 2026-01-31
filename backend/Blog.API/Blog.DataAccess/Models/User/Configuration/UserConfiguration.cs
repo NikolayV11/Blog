@@ -51,7 +51,30 @@ namespace Blog.DataAccess.Models.User.Configuration {
                 .HasForeignKey<Entity.User>(u => u.AvatarId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
-                
+
+            // Связь с постами (Один юзер -> Много постов)
+            builder.HasMany(u => u.Posts)
+                .WithOne(p => p.Author)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Связь с комментариями
+            builder.HasMany(u => u.Commentes)
+                .WithOne(c => c.Author)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Связь с лайками постов
+            builder.HasMany(u => u.LikePosts)
+                .WithOne(l => l.User)
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Связь с лайкоми комментарияв
+            builder.HasMany(u => u.LikeComments)
+                .WithOne(l => l.User)
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
