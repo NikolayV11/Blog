@@ -4,10 +4,10 @@ namespace Blog.DataAccess.Models.User.Entity {
     public class Subscription : BaseEntity {
         // Кто подписывается
         public int FollowerId { get; set; }
-        public User Follower { get; set; }
+        public User Follower { get; set; } = null!;
 
         // На кого подписываются
         public int FollowingId { get; set; }
-        public User Following { get; set; }
+        public User Following { get; set; } = null!;
     }
 }

@@ -2,12 +2,11 @@
 
 namespace Blog.DataAccess.Models.Post.Entity {
     public class PostImages: BaseEntity {
-        public string OriginalName { get; set; }
-        public string StoredName { get; set; }
-        public string ContentType { get; set; }
+        public string StoredName { get; set; } = string.Empty;
+        public string ContentType { get; set; } = string.Empty;
 
         // Внешняя связка с постом
         public int PostId { get; set; }
-        public Post Post { get; set; }
+        public Post Post { get; set; } = null!;
     }
 }

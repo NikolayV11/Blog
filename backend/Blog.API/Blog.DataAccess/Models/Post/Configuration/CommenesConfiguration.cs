@@ -27,17 +27,20 @@ namespace Blog.DataAccess.Models.Post.Configuration {
                 .WithMany(p => p.Commentes)
                 .HasForeignKey(c => c.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
-            //дата регистрации
-            builder.Property(c => c.CreatedAt).IsRequired()
+
+            //дата создания
+            builder.Property(c => c.CreatedAt)
+                .IsRequired()
+                .HasColumnType("datetime")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             // дата изменения
             builder.Property(c => c.UpdatedAt)
-            // Генерировать при добавлении и обновлении
+                .IsRequired(false)
+                .HasColumnType("datetime")
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql(
-                "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-                );
+                .HasDefaultValueSql("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+
         }
     }
 }

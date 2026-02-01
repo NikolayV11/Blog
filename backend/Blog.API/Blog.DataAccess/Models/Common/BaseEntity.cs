@@ -1,7 +1,7 @@
 ﻿namespace Blog.DataAccess.Models.Common {
     public class BaseEntity {
         public int Id { get; set; }
-        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

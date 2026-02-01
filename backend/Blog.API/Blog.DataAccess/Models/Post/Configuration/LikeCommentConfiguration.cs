@@ -24,17 +24,19 @@ namespace Blog.DataAccess.Models.Post.Configuration {
             // один пользователь один лайк
             builder.HasIndex(l => new {l.UserId, l.CommentId}).IsUnique();
 
-            // дата создания 
-            builder.Property(l => l.CreatedAt).IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            //дата создания
+            builder.Property(c => c.CreatedAt)
+              .IsRequired()
+              .HasColumnType("datetime")
+              .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            // для изменения
-            builder.Property(l => l.UpdatedAt)
-                // Генерировать при добавлении и обновлении
+            // дата изменения
+            builder.Property(c => c.UpdatedAt)
+                .IsRequired(false)
+                .HasColumnType("datetime")
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql(
-                "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-                );
+                .HasDefaultValueSql("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+
         }
     }
 }

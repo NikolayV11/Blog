@@ -4,7 +4,7 @@ namespace Blog.DataAccess.Models.Post.Entity {
         public string? Content { get; set; }
         // связь с пользователем 
         public int UserId { get; set; }
-        public User.Entity.User Author { get; set; }
+        public User.Entity.User Author { get; set; } = null!;
 
         // коллекция изображений (Галерея)
         public List<PostImages> Images { get; set; } = new();

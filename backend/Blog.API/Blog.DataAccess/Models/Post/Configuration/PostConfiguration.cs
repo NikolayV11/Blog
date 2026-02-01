@@ -23,16 +23,17 @@ namespace Blog.DataAccess.Models.Post.Configuration {
                 .OnDelete(DeleteBehavior.Cascade);
 
             //дата создания
-            builder.Property(p => p.CreatedAt).IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            builder.Property(c => c.CreatedAt)
+              .IsRequired()
+              .HasColumnType("datetime")
+              .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             // дата изменения
-            builder.Property(p => p.UpdatedAt)
-            // Генерировать при добавлении и обновлении
+            builder.Property(c => c.UpdatedAt)
+                .IsRequired(false)
+                .HasColumnType("datetime")
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql(
-                "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-                );
+                .HasDefaultValueSql("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
 
         }
     }

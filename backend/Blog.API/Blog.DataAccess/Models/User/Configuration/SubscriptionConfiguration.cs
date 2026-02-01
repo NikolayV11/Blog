@@ -11,16 +11,32 @@ namespace Blog.DataAccess.Models.User.Configuration {
             // Уникальный индекс: нельзя подписаться на одного и того же дважды
             builder.HasIndex(s => new { s.FollowerId, s.FollowingId }).IsUnique();
 
-            // Настройка связей
+            // 1. Связь для того, КТО подписывается
             builder.HasOne(s => s.Follower)
-                .WithMany(u => u.Followers) // Те, на кого я подписан
+                
+                .WithMany(u => u.Following) // Ссылаемся на список "Following" у юзера
                 .HasForeignKey(s => s.FollowerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // 2. Связь для того, НА КОГО подписываются
             builder.HasOne(s => s.Following)
-                .WithMany(u => u.Followers) // Те, кто подписан на меня
+                .WithMany(u => u.Followers) // Ссылаемся на список "Followers" у юзера
                 .HasForeignKey(s => s.FollowingId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            //дата создания
+            builder.Property(c => c.CreatedAt)
+               .IsRequired()
+               .HasColumnType("datetime")
+               .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // дата изменения
+            builder.Property(c => c.UpdatedAt)
+                .IsRequired(false)
+                .HasColumnType("datetime")
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+
         }
     }
 }

@@ -3,8 +3,8 @@
 namespace Blog.DataAccess.Models.Post.Entity {
     public class LikeComment : BaseEntity{
         public int UserId { get; set; }
-        public User.Entity.User User { get; set; }
+        public User.Entity.User User { get; set; } = null!;
         public int CommentId { get; set; }
-        public Commentes Commentes { get; set; }
+        public Commentes Commentes { get; set; } = null!;
     }
 }

@@ -18,21 +18,23 @@ namespace Blog.DataAccess.Models.Post.Configuration {
                 .WithMany()
                 .HasForeignKey(l => l.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // дата создания 
-            builder.Property(l => l.CreatedAt).IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
+                        
             // один пользователь один лайк
             builder.HasIndex(l => new {l.UserId, l.PostId}).IsUnique();
 
-            // для изменения
-            builder.Property(l => l.UpdatedAt)
-                // Генерировать при добавлении и обновлении
+            //дата создания
+            builder.Property(c => c.CreatedAt)
+              .IsRequired()
+              .HasColumnType("datetime")
+              .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // дата изменения
+            builder.Property(c => c.UpdatedAt)
+                .IsRequired(false)
+                .HasColumnType("datetime")
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql(
-                "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-                );
+                .HasDefaultValueSql("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+
         }
     }
 }

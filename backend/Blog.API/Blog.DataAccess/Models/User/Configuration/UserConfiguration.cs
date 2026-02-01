@@ -14,7 +14,7 @@ namespace Blog.DataAccess.Models.User.Configuration {
             // имя, фамилия, отчество
             builder.Property(u => u.LastName).IsRequired().HasMaxLength(50);
             builder.Property(u => u.FirstName).IsRequired().HasMaxLength(50);
-            builder.Property(u => u.Surname).HasMaxLength(50);
+            builder.Property(u => u.Surname).IsRequired(false).HasMaxLength(50);
 
             // Email
             builder.Property(u => u.Email).IsRequired()
@@ -34,16 +34,17 @@ namespace Blog.DataAccess.Models.User.Configuration {
             builder.Property(u => u.Birthday).IsRequired();
 
             //дата регистрации
-            builder.Property(u => u.CreatedAt).IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            builder.Property(c => c.CreatedAt)
+              .IsRequired()
+              .HasColumnType("datetime")
+              .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             // дата изменения
-            builder.Property(u => u.UpdatedAt)
-            // Генерировать при добавлении и обновлении
+            builder.Property(c => c.UpdatedAt)
+                .IsRequired(false)
+                .HasColumnType("datetime")
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql(
-                "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-                );
+                .HasDefaultValueSql("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
 
             // для фотографии профиля
             builder.HasOne(u => u.Avatar)
