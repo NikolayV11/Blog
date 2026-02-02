@@ -10,6 +10,6 @@ namespace Blog.Core.Abstractions.Service.Posts {
         Task<PostResponse?> GetPostByIdAsync ( int postId );
 
         // получаем посты определённого пользователя
-        Task<List<PostResponse>> GetUserPostsAsinc ( int userId );
+        Task<List<PostResponse>> GetUserPostsAsync ( int userId );
     }
 }
