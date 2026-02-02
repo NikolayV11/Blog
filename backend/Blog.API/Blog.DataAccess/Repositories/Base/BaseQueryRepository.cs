@@ -11,6 +11,7 @@ namespace Blog.DataAccess.Repositories.Base {
 
         protected BaseQueryRepository(BlogDbContext context ) {
             _context = context;
+            _dbSet = _context.Set<TEntity>();
         }
 
         public async Task<List<TEntity>> Get ( ) {
