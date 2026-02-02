@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Blog.DataAccess.Repositories.Base {
     // только чтение
     public abstract class BaseQueryRepository<TEntity> 
-        : IGetRepository<TEntity> where TEntity : class {
+        : IGetRepository<TEntity>, IGetByIdRepository<TEntity> where TEntity : class {
         private readonly BlogDbContext _context;
         protected readonly DbSet<TEntity> _dbSet;
 
