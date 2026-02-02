@@ -1,7 +1,7 @@
 ﻿using Blog.Core.Abstractions.Service.Posts;
 using Blog.Core.Abstractions.Repository;
 using Blog.DataAccess.Models.Post.Entity;
-using Blog.Core.Abstractions.Service.LIkesPosts;
+using Blog.Core.Abstractions.Service.LikesPosts;
 
 namespace Blog.Application.Services.Posts {
     internal class PostLikeQueryService
