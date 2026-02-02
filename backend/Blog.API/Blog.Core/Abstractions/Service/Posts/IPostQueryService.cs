@@ -1,7 +1,7 @@
 ﻿using Blog.Contracts.DTO.Post;
 
 // как будем получать посты
-namespace Blog.Core.Abstractions.Posts {
+namespace Blog.Core.Abstractions.Service.Posts {
     public interface IPostQueryService {
         // получим все посты
         Task<List<PostResponse>> GetPostsAsync ( );

@@ -1,7 +1,7 @@
 ﻿using Blog.Contracts.DTO.Post;
 
 // создание/удалениу поста
-namespace Blog.Core.Abstractions.Posts {
+namespace Blog.Core.Abstractions.Service.Posts {
     public interface IPostService {
         // Возвращает ID нового поста или ошибку
         Task<int> CreatePostAsync ( int userId, CreatePostRequest request );
