@@ -2,15 +2,16 @@
 using Blog.Core.Abstractions.Repository;
 using Blog.Core.Abstractions.Service.Subscriptions;
 using Blog.DataAccess.Models.User.Entity;
+using UserEntity = Blog.DataAccess.Models.User.Entity.User;
 
 namespace Blog.Application.Services.Subscriptions {
     public class SubscriptionQueryService : ISubscriptionQueryService{
         private readonly IGetRepository<Subscription> _subRepo;
-        private readonly IGetRepository<User> _userRepo;
+        private readonly IGetRepository<UserEntity> _userRepo;
 
         public SubscriptionQueryService ( 
             IGetRepository<Subscription> subRepo, 
-            IGetRepository<User> userRepo ) {
+            IGetRepository<UserEntity> userRepo ) {
             _subRepo = subRepo;
             _userRepo = userRepo;
         }
