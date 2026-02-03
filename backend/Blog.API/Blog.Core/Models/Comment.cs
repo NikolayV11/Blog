@@ -8,12 +8,12 @@
         public int PostId { get; }
         public DateTime CreatedAt { get; }
         public DateTime UpdatedAt { get; }
-        public IReadOnlyCollection<LikeCommit> Likes { get; }
+        public IReadOnlyCollection<LikeCommet> Likes { get; }
 
         private Comment(int id, string content, 
             int userId, int postId, 
             DateTime createdAt, DateTime updatedAt,
-            List<LikeCommit> likes) {
+            List<LikeCommet> likes) {
             Id = id;
             Content = content;
             UserId = userId;
@@ -26,7 +26,7 @@
         public static Comment Create(int id, string content, 
             int userId, int postId, 
             DateTime createdAt, DateTime updatedAt,
-            List<LikeCommit> likes) {
+            List<LikeCommet> likes) {
 
             return new Comment(id, content, userId, postId, createdAt, updatedAt, likes);
         }

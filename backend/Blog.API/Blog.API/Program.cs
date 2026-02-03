@@ -1,29 +1,111 @@
-using Blog.DataAccess; // Твой неймспейс, где лежит BlogDbContext
+using Blog.Application.Auth;
+using Blog.Application.Services.Comments;
+using Blog.Application.Services.Posts;
+using Blog.Application.Services.Subscriptions;
+using Blog.Application.Services.User;
+using Blog.Core.Abstractions.Auth;
+using Blog.Core.Abstractions.Repository;
+using Blog.Core.Abstractions.Service;
+using Blog.Core.Abstractions.Service.Comments;
+using Blog.Core.Abstractions.Service.LikesComments;
+using Blog.Core.Abstractions.Service.LikesPosts;
+using Blog.Core.Abstractions.Service.Posts;
+using Blog.Core.Abstractions.Service.Subscriptions;
+using Blog.Core.Abstractions.Service.User;
+using Blog.DataAccess;
+using Blog.DataAccess.Repositories.LikeComment;
+using Blog.DataAccess.Repositories.LikePost;
+using Blog.DataAccess.Repositories.Posts;
+using Blog.DataAccess.Repositories.Subscriptions;
+using Blog.DataAccess.Repositories.Users;
 using Microsoft.EntityFrameworkCore;
+// Алиасы для устранения конфликтов имен
+using CommentEntity = Blog.DataAccess.Models.Post.Entity.Commentes;
+using LikeCommentEntity = Blog.DataAccess.Models.Post.Entity.LikeComment;
+using LikePostEntity = Blog.DataAccess.Models.Post.Entity.LikePost;
+using PostEntity = Blog.DataAccess.Models.Post.Entity.Post;
+using SubscriptionEntity = Blog.DataAccess.Models.User.Entity.Subscription;
+using UserEntity = Blog.DataAccess.Models.User.Entity.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Получаем строку подключения из appsettings.json
+// 1. Настройка БД
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// 2. Регистрируем контекст базы данных (используем Pomelo для MySQL)
 builder.Services.AddDbContext<BlogDbContext>(options => {
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
-// 3. Добавляем стандартные сервисы
+// 2. Стандартные сервисы API
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); // Чтобы ты мог тестировать API через браузер
+builder.Services.AddSwaggerGen();
+
+// --- 3. РЕГИСТРАЦИЯ РЕПОЗИТОРИЕВ (DataAccess) ---
+
+// UserRepository
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<ICreateRepository<UserEntity>>(x => x.GetRequiredService<UserRepository>());
+builder.Services.AddScoped<IGetByEmailRepository<UserEntity>>(x => x.GetRequiredService<UserRepository>());
+builder.Services.AddScoped<IGetByIdRepository<UserEntity>>(x => x.GetRequiredService<UserRepository>());
+builder.Services.AddScoped<IGetRepository<UserEntity>>(x => x.GetRequiredService<UserRepository>());
+
+// SubscriptionRepository
+builder.Services.AddScoped<SubscriptionRepository>();
+builder.Services.AddScoped<ICreateRepository<SubscriptionEntity>>(x => x.GetRequiredService<SubscriptionRepository>());
+builder.Services.AddScoped<IDeleteRepository<SubscriptionEntity>>(x => x.GetRequiredService<SubscriptionRepository>());
+builder.Services.AddScoped<IGetRepository<SubscriptionEntity>>(x => x.GetRequiredService<SubscriptionRepository>());
+
+// PostRepository
+builder.Services.AddScoped<PostRepository>();
+builder.Services.AddScoped<ICreateRepository<PostEntity>>(x => x.GetRequiredService<PostRepository>());
+builder.Services.AddScoped<IDeleteRepository<PostEntity>>(x => x.GetRequiredService<PostRepository>());
+builder.Services.AddScoped<IGetRepository<PostEntity>>(x => x.GetRequiredService<PostRepository>());
+builder.Services.AddScoped<IGetByIdRepository<PostEntity>>(x => x.GetRequiredService<PostRepository>());
+
+// LikePostRepository
+builder.Services.AddScoped<LikePostRepository>();
+builder.Services.AddScoped<ICreateRepository<LikePostEntity>>(x => x.GetRequiredService<LikePostRepository>());
+builder.Services.AddScoped<IDeleteRepository<LikePostEntity>>(x => x.GetRequiredService<LikePostRepository>());
+builder.Services.AddScoped<IGetRepository<LikePostEntity>>(x => x.GetRequiredService<LikePostRepository>());
+builder.Services.AddScoped<IGetByIdRepository<LikePostEntity>>(x => x.GetRequiredService<LikePostRepository>());
+
+// LikeCommentRepository
+builder.Services.AddScoped<LikeCommentRepository>();
+builder.Services.AddScoped<ICreateRepository<LikeCommentEntity>>(x => x.GetRequiredService<LikeCommentRepository>());
+builder.Services.AddScoped<IDeleteRepository<LikeCommentEntity>>(x => x.GetRequiredService<LikeCommentRepository>());
+builder.Services.AddScoped<IGetRepository<LikeCommentEntity>>(x => x.GetRequiredService<LikeCommentRepository>());
+builder.Services.AddScoped<IGetByIdRepository<LikeCommentEntity>>(x => x.GetRequiredService<LikeCommentRepository>());
+
+
+// --- 4. РЕГИСТРАЦИЯ СЕРВИСОВ (Application) ---
+
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IUserQueryService, UserQueryService>();
+
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
+
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IPostQueryService, PostQueryService>();
+
+builder.Services.AddScoped<IPostLikeService, PostLikeService>();
+builder.Services.AddScoped<ILikePostQueryService, PostLikeQueryService>();
+
+// ДОБАВЛЕНО: Сервисы лайков комментариев
+builder.Services.AddScoped<ICommentLikeQueryService, CommentLikeQueryService>();
+builder.Services.AddScoped<ILikeServices, CommentLikeService>();
 
 var app = builder.Build();
 
-// 4. Настраиваем Swagger (визуальный интерфейс для запросов)
+// 5. КОНВЕЙЕР (Middleware)
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 

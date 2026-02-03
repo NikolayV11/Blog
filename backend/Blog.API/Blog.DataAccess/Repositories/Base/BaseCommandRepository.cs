@@ -6,8 +6,8 @@ namespace Blog.DataAccess.Repositories.Base {
     public abstract class BaseCommandRepository<TEntity> 
         : ICreateRepository<TEntity>, IDeleteRepository<TEntity>
         where TEntity : class {
-        private readonly BlogDbContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly BlogDbContext _context;
+        protected readonly DbSet<TEntity> _dbSet;
         
         protected BaseCommandRepository(BlogDbContext context ) {
             _context = context;

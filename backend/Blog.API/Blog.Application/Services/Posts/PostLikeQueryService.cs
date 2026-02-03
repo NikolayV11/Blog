@@ -4,7 +4,7 @@ using Blog.DataAccess.Models.Post.Entity;
 using Blog.Core.Abstractions.Service.LikesPosts;
 
 namespace Blog.Application.Services.Posts {
-    internal class PostLikeQueryService
+    public class PostLikeQueryService
         : ILikePostQueryService
         {
         private readonly IGetRepository<LikePost> _likeRepo;
