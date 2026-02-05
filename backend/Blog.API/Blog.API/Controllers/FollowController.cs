@@ -19,7 +19,7 @@ namespace Blog.API.Controllers {
         }
 
         // Подписаться / Отписаться
-        [HttpPost("{followingId}")]
+        [HttpPost("{followingId}")] // на кого пописан
         public async Task<IActionResult> ToggleFollow(int followingId ) {
             var followerId = int.Parse(User.FindFirst("userId")!.Value);
 
@@ -31,7 +31,7 @@ namespace Blog.API.Controllers {
         }
 
         // Получить список подписок
-        [HttpGet("my-following")]
+        [HttpGet("my-following")] // кто подписан
         public async Task<IActionResult> getMyFollowing ( ) {
             var userId = int.Parse(User.FindFirst("userId")!.Value);
             var following = await _sebQuery.GetFollowingAsync(userId);

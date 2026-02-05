@@ -10,7 +10,7 @@ namespace Blog.DataAccess.Repositories.Posts {
         ICreateRepository<Post>,
         IDeleteRepository<Post>,
         IGetRepository<Post>
-        {
+        { 
 
         public PostRepository(BlogDbContext context) : base(context) { }
 

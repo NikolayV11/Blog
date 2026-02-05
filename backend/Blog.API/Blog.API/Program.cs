@@ -107,7 +107,7 @@ builder.Services.AddScoped<ICreateRepository<CommentEntity>>(x => x.GetRequiredS
 builder.Services.AddScoped<IDeleteRepository<CommentEntity>>(x => x.GetRequiredService<Blog.DataAccess.Repositories.Comments.CommentRepository>());
 builder.Services.AddScoped<IGetRepository<CommentEntity>>(x => x.GetRequiredService<Blog.DataAccess.Repositories.Comments.CommentRepository>());
 builder.Services.AddScoped<IGetByIdRepository<CommentEntity>>(x => x.GetRequiredService<Blog.DataAccess.Repositories.Comments.CommentRepository>());
-
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 // ДОБАВЛЕНО: Сервисы лайков комментариев
 builder.Services.AddScoped<ICommentLikeQueryService, CommentLikeQueryService>();
