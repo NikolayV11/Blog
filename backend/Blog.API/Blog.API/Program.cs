@@ -19,6 +19,11 @@ using Blog.DataAccess.Repositories.Posts;
 using Blog.DataAccess.Repositories.Subscriptions;
 using Blog.DataAccess.Repositories.Users;
 using Microsoft.EntityFrameworkCore;
+// Для токена
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 // Алиасы для устранения конфликтов имен
 using CommentEntity = Blog.DataAccess.Models.Post.Entity.Commentes;
 using LikeCommentEntity = Blog.DataAccess.Models.Post.Entity.LikeComment;
@@ -26,6 +31,7 @@ using LikePostEntity = Blog.DataAccess.Models.Post.Entity.LikePost;
 using PostEntity = Blog.DataAccess.Models.Post.Entity.Post;
 using SubscriptionEntity = Blog.DataAccess.Models.User.Entity.Subscription;
 using UserEntity = Blog.DataAccess.Models.User.Entity.User;
+using Blog.Application.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,6 +113,44 @@ builder.Services.AddScoped<IGetByIdRepository<CommentEntity>>(x => x.GetRequired
 builder.Services.AddScoped<ICommentLikeQueryService, CommentLikeQueryService>();
 builder.Services.AddScoped<ILikeServices, CommentLikeService>();
 
+// Регистрация генератора токена
+// 1
+builder.Services.AddScoped<IJwtProvaider, JwtProvider>();
+// 2. настройка проверки токена
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecretKey"]))
+        };
+    });
+
+//builder.Services.AddSwaggerGen(c => {
+//    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme {
+//        Description = "Bearer {eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoic29ueUBzZXJ2ZXIuY29tIiwiZXhwIjoxNzcwMzM0Mjg0fQ.Y_o8vv7ePwnJrnBhhvIzzmmEq-NuYbDA6b8ln5m9Yro}",
+//        Name = "Authorization",
+//        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+//        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+//        Scheme = "Bearer"
+//    });
+//    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {
+//        {
+//            new Microsoft.OpenApi.Models.OpenApiSecurityScheme {
+//                Reference = new Microsoft.OpenApi.Models.OpenApiReference {
+//                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+//                    Id = "Bearer"
+//                }
+//            },
+//            new string[] {}
+//        }
+//    });
+//});
+
+
 var app = builder.Build();
 
 // 5. КОНВЕЙЕР (Middleware)
@@ -116,7 +160,11 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseAuthentication();   // Сначала аутентификация
+app.UseAuthorization();    // Потом авторизация
+app.UseStaticFiles(); // для файлов
 app.MapControllers();
 
-app.Run();
+app.Run(); 
+
+           

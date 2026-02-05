@@ -1,10 +1,12 @@
 ﻿using Blog.Contracts.DTO.Post;
 using Blog.Core.Abstractions.Service.Posts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize] // чтобы проверялся токен
     public class PostController : ControllerBase {
         private readonly IPostService _postService;
         private readonly IPostQueryService _postQueryService;
@@ -24,12 +26,16 @@ namespace Blog.API.Controllers {
 
         // 2. Конечная точка: создаст пост
         [HttpPost]
-        public async Task<ActionResult<int>> CreatePost ( [FromBody] CreatePostRequest request ) {
-            // Пока у нас нет авторизации мы передатим id = 1
-            // Позже возмем из JWT
-            int fakeUserId = 1;
+        public async Task<ActionResult<int>> CreatePost ( [FromForm] CreatePostRequest request ) {
+            // 1. Достаним ID пользователя из Claims токена
+            // "userId" - это ключь который указали в JwsProvider
+            var userIdString = User.FindFirst("userId")?.Value;
 
-            var postId = await _postService.CreatePostAsync(fakeUserId, request);
+            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId)) {
+                return Unauthorized("Не удалось определить пользователя из токена");
+            }
+
+            var postId = await _postService.CreatePostAsync(userId, request);
 
             if (postId == 0)
                 return BadRequest("Не удалост создать пост.");

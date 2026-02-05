@@ -1,4 +1,5 @@
-﻿using Blog.Contracts.DTO.User;
+﻿using Blog.Application.Mapping;
+using Blog.Contracts.DTO.User;
 using Blog.Core.Abstractions.Auth;
 using Blog.Core.Abstractions.Repository;
 using Blog.Core.Abstractions.Service;
@@ -11,16 +12,19 @@ namespace Blog.Application.Services.User {
         private readonly IPasswordHasher _hasher;
         private readonly ICreateRepository<UserEntity> _createRepo;
         private readonly IGetByEmailRepository<UserEntity> _emailRepo;
+        private readonly IJwtProvaider _jwtProvaider;
 
         public IdentityService (
             IUserQueryService userQuery,
             IPasswordHasher hasher,
             ICreateRepository<UserEntity> createRepo,
-            IGetByEmailRepository<UserEntity> emailRepo ) {
+            IGetByEmailRepository<UserEntity> emailRepo,
+            IJwtProvaider jwtProvaider) {
             _userQuery = userQuery;
             _hasher = hasher;
             _createRepo = createRepo;
             _emailRepo = emailRepo;
+            _jwtProvaider = jwtProvaider;
         }
         public async Task<bool> RegisterAsync ( RegisterUserRequest request ) {
             // 1. проверяем уникальность
@@ -48,25 +52,14 @@ namespace Blog.Application.Services.User {
 
         // Сделаем, когда подключим JWT
         public async Task<string> LoginAsync ( LoginUserRequest request ) {
-            // 1. Ищем пользователя в базе через QueryService
-            // Нам нужен доменный пользователь, но чтобы проверить пароль,
-            // нам нужен доступ к Entity (где лежит хеш)
-            // Поэтому воспользуемся репозиторием напрямую или расширим QueryService
-            var userEntity = await _emailRepo.GetByEmailAsync(request.Email); // убедимся что он возвращает сущность с хешом
-            if (userEntity == null) {
-                throw new Exception("Пользователь с таким Email не найден.");
+            var user = await _emailRepo.GetByEmailAsync(request.Email);
+
+            if(user == null || !_hasher.VerifyPassword(request.Password, user.PasswordHash)) {
+                throw new Exception("Неверный логин или пароль.");
             }
+            var userDomain = user.ToDomain();
 
-            // 2. Проверяем пароль
-            // requst.Password - "чистый" пароль от пользователя
-            // userEntity.PasswordHash из бд
-            var isPasswordValid = _hasher.VerifyPassword(request.Password, userEntity.PasswordHash);
-
-            if (!isPasswordValid ) {
-                throw new Exception("Неверный пароль");
-            }
-
-            return "Успешный вход";
+            return _jwtProvaider.GenerateToken(userDomain);
 
         }
     }
