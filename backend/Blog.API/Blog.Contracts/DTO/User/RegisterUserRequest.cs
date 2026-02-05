@@ -6,6 +6,7 @@
         string FirstName,
         string LastName,
         string? Surname,
+        string? AvatarUrl,
         string Phone,
         DateTime Birthday
         );

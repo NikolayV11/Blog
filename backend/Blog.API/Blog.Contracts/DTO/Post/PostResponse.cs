@@ -6,6 +6,7 @@ namespace Blog.Contracts.DTO.Post {
         DateTime CreatedAt,
         int AuthorId,
         string AuthorFullName,
+        string? AuthorAvatarUrl,
         int LikesCount,
         int CommentsCount,
         List<string> ImageUrl

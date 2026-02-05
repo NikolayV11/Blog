@@ -10,8 +10,8 @@ namespace Blog.DataAccess.Repositories.Users {
     public class UserRepository 
         : BaseQueryRepository<User>
         , ICreateRepository<User>
-        ,IGetByEmailRepository<User> 
-        {
+        ,IGetByEmailRepository<User>
+        , IUpDateService<User> {
         public UserRepository(BlogDbContext context)
             : base(context) { }
 

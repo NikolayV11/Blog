@@ -5,6 +5,7 @@ namespace Blog.Core.Abstractions.Service.User {
         Task<bool> RegisterAsync ( RegisterUserRequest request );
 
         // Возвращает JWT токен
-        Task<string> LoginAsync( LoginUserRequest request ); 
+        Task<string> LoginAsync( LoginUserRequest request );
+        Task<bool> UpdateProfileAsync ( int userId, UpdateUserRequest request );
     }
 }

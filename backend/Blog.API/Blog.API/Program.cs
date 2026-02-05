@@ -54,6 +54,11 @@ builder.Services.AddScoped<ICreateRepository<UserEntity>>(x => x.GetRequiredServ
 builder.Services.AddScoped<IGetByEmailRepository<UserEntity>>(x => x.GetRequiredService<UserRepository>());
 builder.Services.AddScoped<IGetByIdRepository<UserEntity>>(x => x.GetRequiredService<UserRepository>());
 builder.Services.AddScoped<IGetRepository<UserEntity>>(x => x.GetRequiredService<UserRepository>());
+// Регистрация обновления и получения по Id для UserRepository
+builder.Services.AddScoped<IGetByIdRepository<UserEntity>>(x => x.GetRequiredService<UserRepository>());
+builder.Services.AddScoped<IUpDateService<UserEntity>>(x => ( IUpDateService<UserEntity> )x.GetRequiredService<UserRepository>() );
+
+
 
 // SubscriptionRepository
 builder.Services.AddScoped<SubscriptionRepository>();

@@ -8,9 +8,11 @@ namespace Blog.API.Controllers {
     [ApiController]
     public class IdentityController : ControllerBase {
         private readonly IIdentityService _identityService;
+        private readonly IUserQueryService _userQuery;
 
-        public IdentityController ( IIdentityService identityService ) {
+        public IdentityController ( IIdentityService identityService, IUserQueryService userQueryService ) {
             _identityService = identityService;
+            _userQuery = userQueryService;
         }
 
         [HttpPost("register")]
@@ -23,6 +25,26 @@ namespace Blog.API.Controllers {
 
             return BadRequest("Ошибка регистрации. Возможно, Email уже занят");
         }
+
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe ( ) {
+            var userId = int.Parse(User.FindFirst("userId")!.Value);
+            var response = await _userQuery.GetUserResponseByIdAsync(userId);
+            return response != null ? Ok(response) : NotFound();
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateProfile ( [FromForm] UpdateUserRequest request ) {
+            var userId = int.Parse(User.FindFirst("userId")!.Value);
+
+            var result = await _identityService.UpdateProfileAsync(userId, request);
+
+            if (!result)
+                return BadRequest("Не удалось обновить профи Murphy");
+
+            return Ok(new { message = "Профиль и аватар обновлены" });
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login ( [FromBody] LoginUserRequest request ) {
             try {

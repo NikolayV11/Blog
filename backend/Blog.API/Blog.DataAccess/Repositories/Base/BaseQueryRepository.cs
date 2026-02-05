@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Blog.DataAccess.Repositories.Base {
     // только чтение
     public abstract class BaseQueryRepository<TEntity> 
-        : IGetRepository<TEntity>, IGetByIdRepository<TEntity> where TEntity : class {
+        : IGetRepository<TEntity>, IGetByIdRepository<TEntity>, IUpDateRepository<TEntity> where TEntity : class {
         protected readonly BlogDbContext _context;
         protected readonly DbSet<TEntity> _dbSet;
 
@@ -20,6 +20,11 @@ namespace Blog.DataAccess.Repositories.Base {
 
         public async Task<TEntity?> GetById(int id ) {
             return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<bool> UpData ( TEntity entity ) {
+            _context.Entry(entity).State = EntityState.Modified;
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

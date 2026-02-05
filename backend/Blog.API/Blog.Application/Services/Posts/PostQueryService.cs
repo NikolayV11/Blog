@@ -23,6 +23,7 @@ namespace Blog.Application.Services.Posts {
                     p.CreatedAt,
                     p.UserId,
                     $"{p.Author.FirstName} {p.Author.LastName}",
+                    p.Author.Avatar?.StoredName != null ? $"/uploads/{p.Author.Avatar.StoredName}" : null,
                     p.Likes.Count,
                     p.Commentes.Count,
                     p.Images.Select(img => $"uploads/{img.StoredName}").ToList()
@@ -46,6 +47,7 @@ namespace Blog.Application.Services.Posts {
                 post.CreatedAt,
                 post.UserId,
                 $"{post.Author.FirstName} {post.Author.LastName}",
+                post.Author.Avatar?.StoredName != null ? $"/uploads/{post.Author.Avatar.StoredName}" : null,
                 post.Likes.Count,
                 post.Commentes.Count,
                 post.Images.Select(img => $"uploads/{img.StoredName}").ToList()
