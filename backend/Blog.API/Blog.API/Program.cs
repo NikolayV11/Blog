@@ -92,6 +92,16 @@ builder.Services.AddScoped<IPostQueryService, PostQueryService>();
 
 builder.Services.AddScoped<IPostLikeService, PostLikeService>();
 builder.Services.AddScoped<ILikePostQueryService, PostLikeQueryService>();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<ICommentQueryService, CommentQueryService>();
+
+// Репозиторий комментариев
+builder.Services.AddScoped<Blog.DataAccess.Repositories.Comments.CommentRepository>();
+builder.Services.AddScoped<ICreateRepository<CommentEntity>>(x => x.GetRequiredService<Blog.DataAccess.Repositories.Comments.CommentRepository>());
+builder.Services.AddScoped<IDeleteRepository<CommentEntity>>(x => x.GetRequiredService<Blog.DataAccess.Repositories.Comments.CommentRepository>());
+builder.Services.AddScoped<IGetRepository<CommentEntity>>(x => x.GetRequiredService<Blog.DataAccess.Repositories.Comments.CommentRepository>());
+builder.Services.AddScoped<IGetByIdRepository<CommentEntity>>(x => x.GetRequiredService<Blog.DataAccess.Repositories.Comments.CommentRepository>());
+
 
 // ДОБАВЛЕНО: Сервисы лайков комментариев
 builder.Services.AddScoped<ICommentLikeQueryService, CommentLikeQueryService>();
