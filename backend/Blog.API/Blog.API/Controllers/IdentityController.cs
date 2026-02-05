@@ -23,5 +23,15 @@ namespace Blog.API.Controllers {
 
             return BadRequest("Ошибка регистрации. Возможно, Email уже занят");
         }
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login ( [FromBody] LoginUserRequest request ) {
+            try {
+                var token = await _identityService.LoginAsync(request);
+                return Ok(new { Token = token });
+            } catch (Exception ex) {
+                // Если пароль неверный или пользователя нет
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

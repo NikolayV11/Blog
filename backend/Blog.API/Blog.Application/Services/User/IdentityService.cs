@@ -62,7 +62,7 @@ namespace Blog.Application.Services.User {
             // userEntity.PasswordHash из бд
             var isPasswordValid = _hasher.VerifyPassword(request.Password, userEntity.PasswordHash);
 
-            if (( !isPasswordValid ) {
+            if (!isPasswordValid ) {
                 throw new Exception("Неверный пароль");
             }
 
@@ -72,4 +72,4 @@ namespace Blog.Application.Services.User {
     }
 
 }
-}
+
