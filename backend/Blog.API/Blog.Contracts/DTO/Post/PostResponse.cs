@@ -7,6 +7,7 @@ namespace Blog.Contracts.DTO.Post {
         int AuthorId,
         string AuthorFullName,
         int LikesCount,
-        int CommentsCount
+        int CommentsCount,
+        List<string> ImageUrl
         );
 }

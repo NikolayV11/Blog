@@ -6,13 +6,17 @@ using Blog.DataAccess.Models.Post.Entity;
 
 namespace Blog.Application.Services.Comments {
     public class CommentLikeService : ILikeServices {
+        private readonly ICommentLikeQueryService _query;
         private readonly ICommentQueryService _queryService;
         private readonly ICreateRepository<LikeComment> _createRepo;
         private readonly IDeleteRepository<LikeComment> _deleteRepo;
 
-        public CommentLikeService ( ICommentQueryService queryService, 
+        public CommentLikeService ( 
+            ICommentLikeQueryService query,
+            ICommentQueryService queryService, 
             ICreateRepository<LikeComment> createRepo, 
             IDeleteRepository<LikeComment> deleteRepo ) {
+            _query = query;
             _queryService = queryService;
             _createRepo = createRepo;
             _deleteRepo = deleteRepo;

@@ -5,11 +5,10 @@ using Blog.DataAccess.Models.Post.Entity;
 
 namespace Blog.Application.Services.Posts {
     public class PostQueryService :
-        IPostQueryService
-        {
+        IPostQueryService {
         private readonly IGetRepository<Post> _postRepo;
 
-        public PostQueryService(IGetRepository<Post> postRepo) {
+        public PostQueryService ( IGetRepository<Post> postRepo ) {
             _postRepo = postRepo;
         }
 
@@ -25,14 +24,15 @@ namespace Blog.Application.Services.Posts {
                     p.UserId,
                     $"{p.Author.FirstName} {p.Author.LastName}",
                     p.Likes.Count,
-                    p.Commentes.Count
+                    p.Commentes.Count,
+                    p.Images.Select(img => $"uploads/{img.StoredName}").ToList()
                     )).ToList();
 
             return postList;
         }
 
         // Получаем пост по ID
-        public async Task<PostResponse?> GetPostByIdAsync(int postId ) {
+        public async Task<PostResponse?> GetPostByIdAsync ( int postId ) {
             var posts = await _postRepo.Get();
 
             var post = posts.FirstOrDefault(p => p.Id == postId);
@@ -47,15 +47,16 @@ namespace Blog.Application.Services.Posts {
                 post.UserId,
                 $"{post.Author.FirstName} {post.Author.LastName}",
                 post.Likes.Count,
-                post.Commentes.Count
+                post.Commentes.Count,
+                post.Images.Select(img => $"uploads/{img.StoredName}").ToList()
                 );
 
             return response;
         }
 
-        public async Task<List<PostResponse>> GetUserPostsAsync(int userId ) {
+        public async Task<List<PostResponse>> GetUserPostsAsync ( int userId ) {
             var allPosts = await GetPostsAsync();
-            var postsUser = allPosts.Where(p => p.AuthorId ==  userId).ToList();
+            var postsUser = allPosts.Where(p => p.AuthorId == userId).ToList();
 
             return postsUser;
         }
