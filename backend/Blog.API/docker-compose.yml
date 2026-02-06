@@ -1,0 +1,31 @@
+services:
+  # Наша база данных
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: blog_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Наш API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5168:8080" # Снаружи заходим по 5168, внутри контейнера стучим в 8080
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # ВАЖНО: Server=db (имя сервиса базы выше)
+      - ConnectionStrings__DefaultConnection=Server=db;Database=blog_db;Uid=root;Pwd=password;
+    volumes:
+      - ./Blog.API/wwwroot/uploads:/app/wwwroot/uploads # Проброс фото на диск
+
+volumes:
+  db_data:

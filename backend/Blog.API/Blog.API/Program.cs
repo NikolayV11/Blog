@@ -134,26 +134,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-//builder.Services.AddSwaggerGen(c => {
-//    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme {
-//        Description = "Bearer {eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoic29ueUBzZXJ2ZXIuY29tIiwiZXhwIjoxNzcwMzM0Mjg0fQ.Y_o8vv7ePwnJrnBhhvIzzmmEq-NuYbDA6b8ln5m9Yro}",
-//        Name = "Authorization",
-//        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-//        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-//        Scheme = "Bearer"
-//    });
-//    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {
-//        {
-//            new Microsoft.OpenApi.Models.OpenApiSecurityScheme {
-//                Reference = new Microsoft.OpenApi.Models.OpenApiReference {
-//                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-//                    Id = "Bearer"
-//                }
-//            },
-//            new string[] {}
-//        }
-//    });
-//});
+// чтобы React смог подключится к серверу
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowReactApp", policy => {
+        policy.WithOrigins("http://localhost:3000") // Адрес твоего будущего React-приложения
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 
 var app = builder.Build();
