@@ -19,9 +19,15 @@ namespace Blog.DataAccess.Repositories.Posts {
             return await _dbSet
                 .AsNoTracking()
                 .Include(p => p.Author)
-                .ThenInclude(a => a.Avatar)
+                    // Аватар автора поста
+                    .ThenInclude(a => a.Avatar) 
                 .Include(p => p.Images)
-                .Include(p => p.Commentes)
+                // Загружаем сами комментарии
+                .Include(p => p.Commentes)  
+                    // Для каждого комментария грузим автора
+                    .ThenInclude(c => c.Author) 
+                        // Для автора комментария грузим аватар
+                        .ThenInclude(ca => ca.Avatar)   
                 .Include(p => p.Likes)
                 .ToListAsync();
         }

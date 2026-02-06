@@ -2,6 +2,8 @@
 using Blog.Core.Abstractions.Repository;
 using Blog.Contracts.DTO.Post;
 using Blog.DataAccess.Models.Post.Entity;
+using Blog.DataAccess.Repositories.Comments;
+using Blog.Contracts.DTO.Comment;
 
 namespace Blog.Application.Services.Posts {
     public class PostQueryService :
@@ -26,6 +28,13 @@ namespace Blog.Application.Services.Posts {
                     p.Author.Avatar?.StoredName != null ? $"/uploads/{p.Author.Avatar.StoredName}" : null,
                     p.Likes.Count,
                     p.Commentes.Count,
+                    p.Commentes.Select(c => new CommentResponse(
+                        c.Id,
+                        c.Content,
+                        c.CreatedAt,
+                        $"{c.Author.FirstName} {c.Author.LastName}",
+                        c.Author.Avatar != null ? $"{c.Author.Avatar.StoredName}" : null
+                        )).ToList(),
                     p.Images.Select(img => $"uploads/{img.StoredName}").ToList()
                     )).ToList();
 
@@ -50,6 +59,13 @@ namespace Blog.Application.Services.Posts {
                 post.Author.Avatar?.StoredName != null ? $"/uploads/{post.Author.Avatar.StoredName}" : null,
                 post.Likes.Count,
                 post.Commentes.Count,
+                post.Commentes.Select(c => new CommentResponse(
+                    c.Id,
+                    c.Content,
+                    c.CreatedAt,
+                    $"{c.Author.FirstName} {c.Author.LastName}",
+                    c.Author.Avatar != null ? $"{c.Author.Avatar.StoredName}" : null
+                    )).ToList(),
                 post.Images.Select(img => $"uploads/{img.StoredName}").ToList()
                 );
 

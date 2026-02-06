@@ -6,10 +6,10 @@ namespace Blog.API.Controllers {
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class ValuesController : ControllerBase {
+    public class CommentController : ControllerBase {
         private readonly ICommentService _commentService;
 
-        public ValuesController ( ICommentService commentService ) {
+        public CommentController ( ICommentService commentService ) {
             _commentService = commentService;
         }
 

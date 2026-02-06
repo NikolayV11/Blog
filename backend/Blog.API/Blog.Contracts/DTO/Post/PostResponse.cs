@@ -1,4 +1,6 @@
 ﻿// То что отдаем клиенту
+using Blog.Contracts.DTO.Comment;
+
 namespace Blog.Contracts.DTO.Post {
     public record PostResponse (
         int Id,
@@ -9,6 +11,7 @@ namespace Blog.Contracts.DTO.Post {
         string? AuthorAvatarUrl,
         int LikesCount,
         int CommentsCount,
+        List<CommentResponse> Comments,
         List<string> ImageUrl
         );
 }
