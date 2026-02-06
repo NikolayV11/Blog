@@ -70,6 +70,25 @@ namespace Blog.Application.Services.Posts {
                 throw new Exception("У вас нет прав на удаление этого поста");
             }
 
+            // Физическое удаление файлов
+            if (post.Images != null && post.Images.Any()) {
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+                foreach (var image in post.Images) {
+                    var filePath = Path.Combine(uploadPath, image.StoredName);
+
+                    // проверяем существует ли файл
+                    if (File.Exists(filePath)) {
+                        try {
+                            File.Delete(filePath);
+
+                        } catch (IOException ex) {
+                            Console.WriteLine($"ошибка удаление файла: {ex.Message}");
+                        }
+                    }
+                }
+            }
+
             return await _deleteRepo.Delete(post);
         }
     }
